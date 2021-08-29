@@ -28,13 +28,16 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModel:CellViewModel}">
-                        <StackPanel>
-                            <Border>
-                                <TextBlock Text="{Binding Value}"/>
-                            </Border>
-                        </StackPanel>
+                        <TextBlock Text="{Binding Value}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="BorderBrush" Value="Black"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="Margin" Value="0"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
             </ListBox>
         </Grid>
     </Grid>
