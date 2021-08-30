@@ -7,14 +7,7 @@
         public char Value
         {
             get { return _value; }
-            set
-            { 
-                if(value != _value)
-                {
-                    _value = value;
-                    OnPropertyChanged();
-                }           
-            }
+            set { SetField(ref _value, value); }
         }
     }
 }

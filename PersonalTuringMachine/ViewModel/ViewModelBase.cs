@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace PersonalTuringMachine.ViewModel
@@ -11,6 +12,15 @@ namespace PersonalTuringMachine.ViewModel
         {
             PropertyChangedEventArgs args = new PropertyChangedEventArgs(propName);
             PropertyChanged?.Invoke(this, args);
+        }
+
+        protected void SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (!EqualityComparer<T>.Default.Equals(field, value))
+            {
+                field = value;
+                OnPropertyChanged(propertyName);
+            }
         }
     }
 }
