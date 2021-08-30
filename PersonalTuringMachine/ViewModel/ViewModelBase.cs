@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -21,6 +22,17 @@ namespace PersonalTuringMachine.ViewModel
                 field = value;
                 OnPropertyChanged(propertyName);
             }
+        }
+
+        protected void OpenInModal(ViewModelBase viewModel, Action<ExitCode> closeCallback)
+        {
+            ModalWindow modalWindow = new ModalWindow();
+            modalWindow.DataContext = viewModel;
+            modalWindow.Closed += (sender, args) =>
+            {
+                closeCallback(ExitCode.Saved);
+            };
+            modalWindow.ShowDialog();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace PersonalTuringMachine.Extensions
 {
     public static class EnumerableExtensions
     {
-        public static string ToDelimitedList<T>(this IEnumerable<T> list, char delimiter = ',')
+        public static string ToDelimitedList<T>(this IEnumerable<T> list, string delimiter = ",")
         {
             string delimitedList = string.Empty;
             foreach (T obj in list)

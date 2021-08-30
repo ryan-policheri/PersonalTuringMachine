@@ -12,7 +12,7 @@ namespace PersonalTuringMachine
 
             char[] alphabet = { '>', '1', '0', '□' };
             IEnumerable<TapeViewModel> tapes = new List<TapeViewModel> { new TapeViewModel("Tape 1 (Input) (Read-Only)"), new TapeViewModel("Tape 2 (Working) (Read-Write)"), new TapeViewModel("Tape 3 (Output) (Read-Write)") };
-            IEnumerable<StateViewModel> states = new List<StateViewModel> { new StateViewModel("Qstart"), new StateViewModel("Qhalt") };
+            IEnumerable<StateViewModel> states = new List<StateViewModel> { new StateViewModel("Qstart", false), new StateViewModel("Qhalt", false) };
 
             PtmViewModel ptmViewModel = new PtmViewModel(alphabet, tapes, states);
 
