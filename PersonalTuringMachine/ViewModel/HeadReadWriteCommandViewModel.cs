@@ -1,16 +1,12 @@
 ﻿using PersonalTuringMachine.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersonalTuringMachine.ViewModel
 {
-    public class HeadReadWriteViewModel : ViewModelBase
+    public class HeadReadWriteCommandViewModel : ViewModelBase
     {
-        public HeadReadWriteViewModel(TapeViewModel tape, IEnumerable<char> alphabet)
+        public HeadReadWriteCommandViewModel(TapeViewModel tape, IEnumerable<char> alphabet)
         {
             TapeName = tape.ShortName;
             ToolTip = tape.LongName;

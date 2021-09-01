@@ -45,7 +45,6 @@
             <Button Content="Add +" FontSize="14" FontWeight="Bold" Command="{Binding AddState}"/>
         </StackPanel>
 
-
         <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3">
             <TextBlock Text="Transition Functions" FontSize="14" FontWeight="Bold" />
             <TextBlock FontSize="14" FontWeight="Bold">

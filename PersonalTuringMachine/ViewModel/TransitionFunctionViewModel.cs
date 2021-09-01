@@ -1,4 +1,5 @@
 ﻿using PersonalTuringMachine.Extensions;
+using PersonalTuringMachine.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,8 +18,22 @@ namespace PersonalTuringMachine.ViewModel
             Tapes = tapes;
             States = states;
 
-            InputReadWriteArgs = new ObservableCollection<HeadReadWriteViewModel>();
-            foreach(TapeViewModel tape in Tapes) { InputReadWriteArgs.Add(new HeadReadWriteViewModel(tape, alphabet)); }
+            InputHeadReadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
+            foreach(TapeViewModel tape in Tapes) { InputHeadReadWriteArgs.Add(new HeadReadWriteCommandViewModel(tape, alphabet)); }
+
+            OutputHeadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
+            foreach(TapeViewModel tape in Tapes)
+            {
+                HeadReadWriteCommandViewModel readWriteCommand = new HeadReadWriteCommandViewModel(tape, alphabet);
+                OutputHeadWriteArgs.Add(readWriteCommand);
+            }
+
+            OutputHeadMoveArgs = new ObservableCollection<HeadMoveCommandViewModel>();
+            foreach (TapeViewModel tape in Tapes)
+            {
+                HeadMoveCommandViewModel moveCommand = new HeadMoveCommandViewModel(tape);
+                OutputHeadMoveArgs.Add(moveCommand);
+            }
         }
 
         public ObservableCollection<char> Alphabet { get; }
@@ -34,7 +49,7 @@ namespace PersonalTuringMachine.ViewModel
             set { SetField(ref _selectedState, value); OnPropertyChanged(nameof(InputDisplay)); }
         }
 
-        public ObservableCollection<HeadReadWriteViewModel> InputReadWriteArgs { get; }
+        public ObservableCollection<HeadReadWriteCommandViewModel> InputHeadReadWriteArgs { get; }
 
         public string[] Input { get; set; }
 
@@ -50,5 +65,9 @@ namespace PersonalTuringMachine.ViewModel
         public string[] Output { get; set; }
 
         public string OutputDisplay { get; set; }
+
+        public ObservableCollection<HeadReadWriteCommandViewModel> OutputHeadWriteArgs { get; }
+
+        public ObservableCollection<HeadMoveCommandViewModel> OutputHeadMoveArgs { get; }
     }
 }
