@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PersonalTuringMachine.View"
+             xmlns:view="clr-namespace:PersonalTuringMachine.View"
+             xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -12,7 +14,102 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedState}" DisplayMemberPath="Name"/>
+
+        <Border Grid.Row="0" Grid.Column="0" BorderThickness="1" BorderBrush="Black" Margin="0 0 10 0" Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Input" HorizontalAlignment="Center" Margin="0 0 0 5" FontStyle="Italic" FontWeight="Bold"/>
+
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1 1 0.5 1" BorderBrush="Black" Padding="5">
+                    <StackPanel>
+                        <TextBlock Text="State" FontWeight="Bold"/>
+                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedState}" DisplayMemberPath="Name" MinWidth="80"/>
+                    </StackPanel>
+                </Border>
+
+                <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding InputReadWriteArgs}" BorderThickness="0.5 1 1 1" BorderBrush="Black" Padding="5 0 5 0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModel:HeadReadWriteViewModel}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding TapeName}" ToolTip="{Binding ToolTip}" FontWeight="Bold"/>
+                                <ComboBox ItemsSource="{Binding ReadWriteValueOptions}" SelectedItem="{Binding ReadWriteValue}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="MinWidth" Value="40"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="0" Grid.Column="1"  Text="⟶" FontWeight="Bold" FontSize="30" VerticalAlignment="Center"/>
+
+        <Border Grid.Row="0" Grid.Column="2" BorderThickness="1" BorderBrush="Black" Margin="10 0 0 0" Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Output" HorizontalAlignment="Center" Margin="0 0 0 5" FontStyle="Italic" FontWeight="Bold"/>
+
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1 1 0.5 1" BorderBrush="Black" Padding="5">
+                    <StackPanel>
+                        <TextBlock Text="State" FontWeight="Bold"/>
+                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedState}" DisplayMemberPath="Name" MinWidth="80"/>
+                    </StackPanel>
+                </Border>
+
+                <ListBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding OutputTapeArgs}" BorderThickness="0.5 1 1 1" BorderBrush="Black" Padding="5 0 5 0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModel:HeadReadWriteViewModel}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding TapeName}" ToolTip="{Binding ToolTip}" FontWeight="Bold"/>
+                                <ComboBox ItemsSource="{Binding ReadWriteValueOptions}" SelectedItem="{Binding ReadWriteValue}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0 0 1 0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="MinWidth" Value="40"/>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

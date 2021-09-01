@@ -7,13 +7,13 @@
         xmlns:view="clr-namespace:PersonalTuringMachine.View"
         xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
         mc:Ignorable="d"
-        Title="ModalWindow" Height="450" Width="800">
+        Title="ModalWindow" Height="225" Width="400">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:TransitionFunctionViewModel}">
             <view:TransitionFunctionView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Content="{Binding}"/>
+        <ContentControl Content="{Binding}" Margin="10"/>
     </Grid>
 </Window>

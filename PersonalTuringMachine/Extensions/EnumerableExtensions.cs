@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace PersonalTuringMachine.Extensions
 {
@@ -18,6 +19,17 @@ namespace PersonalTuringMachine.Extensions
             }
 
             return delimitedList;
+        }
+
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> enumeration)
+        {
+            if (enumeration == null) return null;
+            ObservableCollection<T> oc = new ObservableCollection<T>();
+            foreach(T item in enumeration)
+            {
+                oc.Add(item);
+            }
+            return oc;
         }
     }
 }

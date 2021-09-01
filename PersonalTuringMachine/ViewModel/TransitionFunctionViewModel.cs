@@ -16,6 +16,9 @@ namespace PersonalTuringMachine.ViewModel
             foreach (char letter in alphabet) Alphabet.Add(letter);
             Tapes = tapes;
             States = states;
+
+            InputReadWriteArgs = new ObservableCollection<HeadReadWriteViewModel>();
+            foreach(TapeViewModel tape in Tapes) { InputReadWriteArgs.Add(new HeadReadWriteViewModel(tape, alphabet)); }
         }
 
         public ObservableCollection<char> Alphabet { get; }
@@ -30,6 +33,8 @@ namespace PersonalTuringMachine.ViewModel
             get { return _selectedState; }
             set { SetField(ref _selectedState, value); OnPropertyChanged(nameof(InputDisplay)); }
         }
+
+        public ObservableCollection<HeadReadWriteViewModel> InputReadWriteArgs { get; }
 
         public string[] Input { get; set; }
 

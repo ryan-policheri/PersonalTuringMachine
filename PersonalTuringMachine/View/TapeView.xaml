@@ -18,7 +18,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding TapeName}" FontWeight="Bold"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding LongName}" FontWeight="Bold"/>
 
             <ListBox x:Name="CellList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Cells}">
                 <ListBox.ItemsPanel>
