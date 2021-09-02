@@ -42,29 +42,23 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<StateViewModel> States { get; }
 
-        private StateViewModel _selectedState;
-        public StateViewModel SelectedState
+
+        private StateViewModel _selectedInputState;
+        public StateViewModel SelectedInputState
         {
-            get { return _selectedState; }
-            set { SetField(ref _selectedState, value); OnPropertyChanged(nameof(InputDisplay)); }
+            get { return _selectedInputState; }
+            set { SetField(ref _selectedInputState, value); }
         }
 
         public ObservableCollection<HeadReadWriteCommandViewModel> InputHeadReadWriteArgs { get; }
 
-        public string[] Input { get; set; }
 
-        public string InputDisplay
+        private StateViewModel _selectedOutputState;
+        public StateViewModel SelectedOutputState
         {
-            get
-            {
-                if (Input == null) return SelectedState?.Name;
-                else return SelectedState?.Name + "(" + Input.ToDelimitedList<string>(", ") + ")";
-            }
+            get { return _selectedOutputState; }
+            set { SetField(ref _selectedOutputState, value); }
         }
-
-        public string[] Output { get; set; }
-
-        public string OutputDisplay { get; set; }
 
         public ObservableCollection<HeadReadWriteCommandViewModel> OutputHeadWriteArgs { get; }
 
@@ -74,7 +68,27 @@ namespace PersonalTuringMachine.ViewModel
 
         private string BuildDisplayStatement()
         {
-            throw new NotImplementedException();
+            StringBuilder builder = new StringBuilder();
+            builder.Append("(").Append(SelectedInputState?.Name);
+            foreach (HeadReadWriteCommandViewModel item in InputHeadReadWriteArgs)
+            {
+                builder.Append(", " + item.ReadWriteValue);
+            }
+            builder.Append(")  ⟶  (")
+                .Append(SelectedOutputState?.Name);
+
+            foreach (HeadReadWriteCommandViewModel item in OutputHeadWriteArgs)
+            {
+                builder.Append(", " + item.ReadWriteValue);
+            }
+
+            foreach(HeadMoveCommandViewModel item in OutputHeadMoveArgs)
+            {
+                builder.Append(", " + item.SelectedMoveSymbol?.Symbol);
+            }
+            builder.Append(")");
+
+            return builder.ToString();
         }
     }
 }

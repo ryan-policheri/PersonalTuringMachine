@@ -34,7 +34,7 @@
                 <Border Grid.Row="1" Grid.Column="0" BorderThickness="1 1 0.5 1" BorderBrush="Black" Padding="5">
                     <StackPanel>
                         <TextBlock Text="State" FontWeight="Bold"/>
-                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedState}" DisplayMemberPath="Name" MinWidth="80"/>
+                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedInputState}" DisplayMemberPath="Name" MinWidth="80"/>
                     </StackPanel>
                 </Border>
 
@@ -83,7 +83,7 @@
                 <Border Grid.Row="1" Grid.Column="0" BorderThickness="1 1 0.5 1" BorderBrush="Black" Padding="5">
                     <StackPanel>
                         <TextBlock Text="State" FontWeight="Bold"/>
-                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedState}" DisplayMemberPath="Name" MinWidth="80"/>
+                        <ComboBox ItemsSource="{Binding States}" SelectedItem="{Binding SelectedOutputState}" DisplayMemberPath="Name" MinWidth="80"/>
                     </StackPanel>
                 </Border>
 

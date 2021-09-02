@@ -59,7 +59,7 @@
             <ListBox ItemsSource="{Binding TransitionFunctions}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModel:TransitionFunctionViewModel}">
-                        <TextBlock Text="{Binding InputDisplay}" />
+                        <TextBlock Text="{Binding DisplayStatement}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
