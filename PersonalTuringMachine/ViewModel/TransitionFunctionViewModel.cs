@@ -19,10 +19,10 @@ namespace PersonalTuringMachine.ViewModel
             States = states;
 
             InputHeadReadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
-            foreach(TapeViewModel tape in Tapes) { InputHeadReadWriteArgs.Add(new HeadReadWriteCommandViewModel(tape, alphabet, HeadReadOrWrite.Read)); }
+            foreach (TapeViewModel tape in Tapes) { InputHeadReadWriteArgs.Add(new HeadReadWriteCommandViewModel(tape, alphabet, HeadReadOrWrite.Read)); }
 
             OutputHeadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
-            foreach(TapeViewModel tape in Tapes)
+            foreach (TapeViewModel tape in Tapes)
             {
                 HeadReadWriteCommandViewModel readWriteCommand = new HeadReadWriteCommandViewModel(tape, alphabet, HeadReadOrWrite.Write);
                 OutputHeadWriteArgs.Add(readWriteCommand);
@@ -43,7 +43,7 @@ namespace PersonalTuringMachine.ViewModel
         public ObservableCollection<StateViewModel> States { get; }
 
         private StateViewModel _selectedState;
-        public StateViewModel SelectedState 
+        public StateViewModel SelectedState
         {
             get { return _selectedState; }
             set { SetField(ref _selectedState, value); OnPropertyChanged(nameof(InputDisplay)); }
@@ -55,10 +55,10 @@ namespace PersonalTuringMachine.ViewModel
 
         public string InputDisplay
         {
-            get 
+            get
             {
                 if (Input == null) return SelectedState?.Name;
-                else return SelectedState?.Name + "(" + Input.ToDelimitedList<string>(", ") + ")"; 
+                else return SelectedState?.Name + "(" + Input.ToDelimitedList<string>(", ") + ")";
             }
         }
 
@@ -70,7 +70,11 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<HeadMoveCommandViewModel> OutputHeadMoveArgs { get; }
 
-        public DisplayStatement => BuildDisplayStatement
-        
+        public string DisplayStatement => BuildDisplayStatement();
+
+        private string BuildDisplayStatement()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
