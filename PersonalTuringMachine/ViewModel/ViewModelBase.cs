@@ -26,12 +26,8 @@ namespace PersonalTuringMachine.ViewModel
 
         protected void OpenInModal(ViewModelBase viewModel, Action<ExitCode> closeCallback)
         {
-            ModalWindow modalWindow = new ModalWindow();
+            ModalWindow modalWindow = new ModalWindow(closeCallback);
             modalWindow.DataContext = viewModel;
-            modalWindow.Closed += (sender, args) =>
-            {
-                closeCallback(ExitCode.Saved);
-            };
             modalWindow.ShowDialog();
         }
     }

@@ -58,7 +58,8 @@ namespace PersonalTuringMachine.ViewModel
             TransitionFunctionViewModel viewModel = new TransitionFunctionViewModel(Alphabet, Tapes, States);
 
             this.OpenInModal(viewModel, (exitCode) => { 
-                TransitionFunctions.Add(viewModel); });
+                if (exitCode == ExitCode.Saved) TransitionFunctions.Add(viewModel);
+            });
         }
 
         private void CalculateAllTransitionFunctions()

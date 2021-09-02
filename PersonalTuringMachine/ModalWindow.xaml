@@ -7,13 +7,27 @@
         xmlns:view="clr-namespace:PersonalTuringMachine.View"
         xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
         mc:Ignorable="d"
-        Title="ModalWindow" Height="225" Width="400">
+        Title="ModalWindow" Height="225" Width="700"
+        Closed="Window_Closed">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:TransitionFunctionViewModel}">
             <view:TransitionFunctionView/>
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <ContentControl Content="{Binding}" Margin="10"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <ContentControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding}" Margin="10"/>
+        <DockPanel Grid.Row="1" Grid.Column="1" Margin="10">
+            <Button Content="Save" Click="Save_Click" Margin="0 0 10 0" Padding="10"/>
+            <Button Content="Cancel" Click="Cancel_Click" Padding="10"/>
+        </DockPanel>
     </Grid>
 </Window>

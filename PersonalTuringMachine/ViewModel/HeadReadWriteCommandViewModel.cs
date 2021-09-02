@@ -6,7 +6,7 @@ namespace PersonalTuringMachine.ViewModel
 {
     public class HeadReadWriteCommandViewModel : ViewModelBase
     {
-        public HeadReadWriteCommandViewModel(TapeViewModel tape, IEnumerable<char> alphabet)
+        public HeadReadWriteCommandViewModel(TapeViewModel tape, IEnumerable<char> alphabet, HeadReadOrWrite readOrWrite)
         {
             TapeName = tape.ShortName;
             ToolTip = tape.LongName;
@@ -25,5 +25,11 @@ namespace PersonalTuringMachine.ViewModel
             get { return _readWriteValue; }
             set { SetField(ref _readWriteValue, value); }
         }
+    }
+
+    public enum HeadReadOrWrite
+    {
+        Read,
+        Write
     }
 }
