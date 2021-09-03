@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.Json;
 
 namespace PersonalTuringMachine.Extensions
 {
@@ -33,6 +34,16 @@ namespace PersonalTuringMachine.Extensions
         {
             if (source == null) return null;
             return "\"" + source + "\"";
+        }
+
+        public static string ToJson<T>(this T source)
+        {
+            return JsonSerializer.Serialize<T>(source);
+        }
+
+        public static T ConvertJsonToObject<T>(this string source)
+        {
+            return JsonSerializer.Deserialize<T>(source);
         }
     }
 }

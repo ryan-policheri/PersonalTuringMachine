@@ -18,8 +18,8 @@ namespace PersonalTuringMachine.ViewModel
             Tapes = tapes;
             States = states;
 
-            InputHeadReadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
-            foreach (TapeViewModel tape in Tapes) { InputHeadReadWriteArgs.Add(new HeadReadWriteCommandViewModel(tape, alphabet, HeadReadOrWrite.Read)); }
+            InputHeadReadArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
+            foreach (TapeViewModel tape in Tapes) { InputHeadReadArgs.Add(new HeadReadWriteCommandViewModel(tape, alphabet, HeadReadOrWrite.Read)); }
 
             OutputHeadWriteArgs = new ObservableCollection<HeadReadWriteCommandViewModel>();
             foreach (TapeViewModel tape in Tapes)
@@ -50,7 +50,7 @@ namespace PersonalTuringMachine.ViewModel
             set { SetField(ref _selectedInputState, value); }
         }
 
-        public ObservableCollection<HeadReadWriteCommandViewModel> InputHeadReadWriteArgs { get; }
+        public ObservableCollection<HeadReadWriteCommandViewModel> InputHeadReadArgs { get; }
 
 
         private StateViewModel _selectedOutputState;
@@ -70,7 +70,7 @@ namespace PersonalTuringMachine.ViewModel
         {
             StringBuilder builder = new StringBuilder();
             builder.Append("(").Append(SelectedInputState?.Name);
-            foreach (HeadReadWriteCommandViewModel item in InputHeadReadWriteArgs)
+            foreach (HeadReadWriteCommandViewModel item in InputHeadReadArgs)
             {
                 builder.Append(", " + item.ReadWriteValue);
             }

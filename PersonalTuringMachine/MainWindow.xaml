@@ -8,7 +8,7 @@
         xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
         mc:Ignorable="d"
         Title="PTM"
-        Icon="Resources\TuringMachine.jpg"
+        Icon="Resources\TapeCell.png"
         Height="450"
         Width="800">
     <Window.Resources>
@@ -19,13 +19,22 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="Personal Turing Machine" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-        <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding Ptm}" Margin="10"/>
+        <Menu Grid.Row="0" FontSize="14" FontWeight="Bold" Background="White">
+            <MenuItem Header="File" >
+                <MenuItem Header="Save machine" Command="{Binding SaveMachine}"/>
+                <MenuItem Header="Save machine as" Command="{Binding SaveMachineAs}"/>
+                <MenuItem Header="Save input" Command="{Binding SaveInput}"/>
+                <MenuItem Header="Save input as" Command="{Binding SaveInputAs}"/>
+            </MenuItem>
+        </Menu>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Personal Turing Machine" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+        <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding Ptm}" Margin="10"/>
     </Grid>
 </Window>

@@ -51,6 +51,33 @@ namespace PersonalTuringMachine.ViewModel
 
         public ICommand AddTransitionFunction { get; }
 
+        public MachineSpec GetMachineSpec()
+        {
+            MachineSpec machineSpec = new MachineSpec
+            {
+                Alphabet = Alphabet,
+                EmptySymbol = EmptySymbol,
+                StartSymbol = StartSymbol,
+                Tapes = new List<TapeSaveModel>(),
+                States = new List<StateSaveModel>(),
+                TransitionFunctions = new List<TransitionFunctionSaveModel>()
+            };
+
+            foreach (TapeViewModel tape in Tapes) { machineSpec.Tapes.Add(new TapeSaveModel { Number = tape.Number, Type = tape.Type }); }
+            foreach (StateViewModel state in States) { machineSpec.States.Add(new StateSaveModel { Name = state.Name, IsReadOnly = state.IsReadOnly }); }
+            foreach (TransitionFunctionViewModel func in TransitionFunctions)
+            {
+                TransitionFunctionSaveModel savedFunc = new TransitionFunctionSaveModel();
+                savedFunc.InputStateName = func.SelectedInputState.Name;
+                savedFunc.InputHeadReadArgs = func.InputHeadReadArgs.Select(x => x.ReadWriteValue).ToArray();
+                savedFunc.OutputStateName = func.SelectedOutputState.Name;
+                savedFunc.OutputWriteArgs = func.OutputHeadWriteArgs.Select(x => x.ReadWriteValue).ToArray();
+                savedFunc.OutputMoveArgs = func.OutputHeadMoveArgs.Select(x => x.SelectedMoveSymbol.Symbol).ToArray();
+                machineSpec.TransitionFunctions.Add(savedFunc);
+            }
+
+            return machineSpec;
+        }
 
         private void OnAddTape()
         {
