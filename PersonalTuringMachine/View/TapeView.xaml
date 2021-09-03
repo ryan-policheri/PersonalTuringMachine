@@ -6,8 +6,12 @@
              xmlns:local="clr-namespace:PersonalTuringMachine.View"
              xmlns:view="clr-namespace:PersonalTuringMachine.View"
              xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
+             xmlns:converters="clr-namespace:PersonalTuringMachine.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:StringToCharConverter x:Key="stringToChar"/>
+    </UserControl.Resources>
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -23,12 +27,13 @@
             <ListBox x:Name="CellList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Cells}">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" CanHorizontallyScroll="True"/>
+                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" CanHorizontallyScroll="True" Margin="0 10 0 10"/>
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModel:CellViewModel}">
-                        <TextBlock Text="{Binding Value}"/>
+                        <TextBox Text="{Binding Value, Mode=TwoWay, Converter={StaticResource stringToChar}}" IsReadOnly="{Binding IsReadOnly}" FontSize="12" Padding="2.5"
+                                 GotFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotMouseCapture" IsMouseCaptureWithinChanged="TextBox_IsMouseCaptureWithinChanged" PreviewKeyDown="TextBox_KeyDown"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>

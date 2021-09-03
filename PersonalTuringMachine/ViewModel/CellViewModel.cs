@@ -1,20 +1,32 @@
-﻿namespace PersonalTuringMachine.ViewModel
+﻿using System.Linq;
+
+namespace PersonalTuringMachine.ViewModel
 {
     public class CellViewModel : ViewModelBase
     {
-        private char _value;
-        private char[] alphabet;
+        private char[] _alphabet;
 
         public CellViewModel(char[] alphabet, char initialValue)
         {
-            this.alphabet = alphabet;
+            _alphabet = alphabet;
             Value = initialValue;
         }
 
+        private char _value;
         public char Value
         {
             get { return _value; }
-            set { SetField(ref _value, value); }
+            set 
+            { 
+                if (_alphabet.Contains(value)) SetField(ref _value, value);
+            }
+        }
+
+        private bool _isReadOnly;
+        public bool IsReadOnly 
+        {
+            get { return _isReadOnly; }
+            set { SetField(ref _isReadOnly, value); }
         }
     }
 }
