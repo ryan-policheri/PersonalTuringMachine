@@ -9,8 +9,8 @@
         mc:Ignorable="d"
         Title="PTM"
         Icon="Resources\TapeCell.png"
-        Height="450"
-        Width="800">
+        Height="700"
+        Width="950">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:PtmViewModel}">
             <view:PtmView/>
@@ -32,6 +32,8 @@
                 <MenuItem Header="Save machine as" Command="{Binding SaveMachineAs}"/>
                 <MenuItem Header="Save input" Command="{Binding SaveInput}"/>
                 <MenuItem Header="Save input as" Command="{Binding SaveInputAs}"/>
+                <MenuItem Header="Load machine" Command="{Binding LoadMachine}"/>
+                <MenuItem Header="Load input" Command="{Binding LoadInput}"/>
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Personal Turing Machine" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"/>

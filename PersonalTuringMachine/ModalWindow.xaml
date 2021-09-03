@@ -7,7 +7,9 @@
         xmlns:view="clr-namespace:PersonalTuringMachine.View"
         xmlns:viewModel="clr-namespace:PersonalTuringMachine.ViewModel"
         mc:Ignorable="d"
-        Title="ModalWindow" Height="225" Width="700"
+        Title="ModalWindow"
+        Height="300"
+        Width="900"
         Closed="Window_Closed">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:TransitionFunctionViewModel}">
