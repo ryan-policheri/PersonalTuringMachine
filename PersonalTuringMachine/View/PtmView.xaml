@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -33,7 +34,9 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Grid.Column="0">
+        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Content="Add Tape" Command="{Binding AddTape}" HorizontalAlignment="Center" Padding="10 0 10 0" Margin="0 10 0 10"/>
+
+        <StackPanel Grid.Row="3" Grid.Column="0">
             <TextBlock Text="States" FontSize="14" FontWeight="Bold" />
             <ListBox ItemsSource="{Binding States}">
                 <ListBox.ItemTemplate>
@@ -45,7 +48,7 @@
             <Button Content="Add +" FontSize="14" FontWeight="Bold" Command="{Binding AddState}"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="3">
+        <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3">
             <TextBlock Text="Transition Functions" FontSize="14" FontWeight="Bold" />
             <TextBlock FontSize="14" FontWeight="Bold">
                 <Run Text="S: Q x Γ" />

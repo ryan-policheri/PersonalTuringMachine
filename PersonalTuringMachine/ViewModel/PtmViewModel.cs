@@ -5,27 +5,37 @@ using PersonalTuringMachine.CommandBinding;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using PersonalTuringMachine.Model;
 
 namespace PersonalTuringMachine.ViewModel
 {
     public class PtmViewModel : ViewModelBase
     {
-        public PtmViewModel(char[] alphabet, IEnumerable<TapeViewModel> defaultTapes, IEnumerable<StateViewModel> defaultStates)
+        public PtmViewModel(char[] alphabet, char startSymbol, char emptySymbol, IEnumerable<TapeViewModel> initialTapes, IEnumerable<StateViewModel> initialStates, IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
         {
+            if (alphabet == null) throw new ArgumentNullException();
+            if (!alphabet.Contains(startSymbol) || !alphabet.Contains(emptySymbol)) throw new ArgumentOutOfRangeException("Alphabet does not contain start or empty symbol");
+
+
             Alphabet = alphabet;
+            StartSymbol = startSymbol;
+            EmptySymbol = emptySymbol;
             Tapes = new ObservableCollection<TapeViewModel>();
             States = new ObservableCollection<StateViewModel>();
             TransitionFunctions = new ObservableCollection<TransitionFunctionViewModel>();
 
-            if (defaultTapes != null) { foreach (TapeViewModel tape in defaultTapes) { Tapes.Add(tape); } }
-            if (defaultStates != null) { foreach (StateViewModel state in defaultStates) { States.Add(state); } }
+            if (initialTapes != null) { foreach (TapeViewModel tape in initialTapes) { Tapes.Add(tape); } }
+            if (initialStates != null) { foreach (StateViewModel state in initialStates) { States.Add(state); } }
 
+            AddTape = new DelegateCommand(OnAddTape);
             AddState = new DelegateCommand(OnAddState);
             AddTransitionFunction = new DelegateCommand(OnAddTransitionFunction);
             CalculateAllTransitionFunctions();
         }
 
         public char[] Alphabet { get; }
+        public char StartSymbol { get; }
+        public char EmptySymbol { get; }
 
         public string AlphabetConcat => Alphabet.ToDelimitedList<char>(", ");
 
@@ -35,9 +45,17 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<TransitionFunctionViewModel> TransitionFunctions { get; }
 
+        public ICommand AddTape { get; }
+
         public ICommand AddState { get; }
 
         public ICommand AddTransitionFunction { get; }
+
+
+        private void OnAddTape()
+        {
+            Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol) }));
+        }
 
         private void OnAddState()
         {
@@ -57,7 +75,8 @@ namespace PersonalTuringMachine.ViewModel
         {
             TransitionFunctionViewModel viewModel = new TransitionFunctionViewModel(Alphabet, Tapes, States);
 
-            this.OpenInModal(viewModel, (exitCode) => { 
+            this.OpenInModal(viewModel, (exitCode) =>
+            {
                 if (exitCode == ExitCode.Saved) TransitionFunctions.Add(viewModel);
             });
         }
@@ -65,18 +84,18 @@ namespace PersonalTuringMachine.ViewModel
         private void CalculateAllTransitionFunctions()
         {
             //Turns out this is difficult...
-        //    TransitionFunctions.Clear();
+            //    TransitionFunctions.Clear();
 
-        //    foreach (StateViewModel state in States)
-        //    {
-        //        List<string> inputArray = new List<string>();
-        //        inputArray.Add(state.Name);
-        //        int[] alphabetTapeCounter = new int[Tapes.Count];
-        //        AppendAlphabetToInput(inputArray, alphabetTapeCounter);
+            //    foreach (StateViewModel state in States)
+            //    {
+            //        List<string> inputArray = new List<string>();
+            //        inputArray.Add(state.Name);
+            //        int[] alphabetTapeCounter = new int[Tapes.Count];
+            //        AppendAlphabetToInput(inputArray, alphabetTapeCounter);
 
-        //        int[] data = new int[Tapes.Count];
-        //        CombinationUtil(Alphabet, Alphabet.Length, Tapes.Count, 0, data, 0);
-        //    }
+            //        int[] data = new int[Tapes.Count];
+            //        CombinationUtil(Alphabet, Alphabet.Length, Tapes.Count, 0, data, 0);
+            //    }
         }
     }
 }
