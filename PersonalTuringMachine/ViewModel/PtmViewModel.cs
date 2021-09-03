@@ -79,6 +79,12 @@ namespace PersonalTuringMachine.ViewModel
             return machineSpec;
         }
 
+        public char[] GetInput()
+        {
+            TapeViewModel readTape = Tapes.Where(x => x.Type == TapeType.ReadOnly).First();
+            return readTape.Cells.Select(x => x.Value).ToArray();
+        }
+
         private void OnAddTape()
         {
             Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol) }));

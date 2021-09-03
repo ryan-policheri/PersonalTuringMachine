@@ -66,33 +66,40 @@ namespace PersonalTuringMachine
                 MachineSpec spec = Ptm.GetMachineSpec();
                 File.WriteAllText(_currentInputFile, spec.ToJson());
             }
+            else OnSaveMachineAs();
         }
 
         private void OnSaveMachineAs()
         {
-            SaveFileDialog fileDialog = new SaveFileDialog();
-            fileDialog.InitialDirectory = _machinesFolder;
-            fileDialog.Filter = "Json files (*.json)|*.json|Text files (*.txt)|*.txt"; ;
-            fileDialog.AddExtension = true;
-            fileDialog.DefaultExt = ".json";
-            fileDialog.ShowDialog();
-
-            if (!String.IsNullOrWhiteSpace(fileDialog.FileName))
-            {
-                MachineSpec spec = Ptm.GetMachineSpec();
-                File.WriteAllText(fileDialog.FileName, spec.ToJson());
-                _currentInputFile = fileDialog.FileName;
-            }
+            MachineSpec spec = Ptm.GetMachineSpec();
+            _currentMachineFile = SaveJsonFileDialog(_machinesFolder, spec.ToJson());
         }
 
         private void OnSaveInput()
         {
-            throw new NotImplementedException();
+            char[] input = Ptm.GetInput();
         }
 
         private void OnSaveInputAs()
         {
             throw new NotImplementedException();
+        }
+
+        private string SaveJsonFileDialog(string folder, string json)
+        {
+            SaveFileDialog fileDialog = new SaveFileDialog();
+            fileDialog.InitialDirectory = folder;
+            fileDialog.Filter = "Json files (*.json)|*.json|Text files (*.txt)|*.txt"; ;
+            fileDialog.AddExtension = true;
+            fileDialog.DefaultExt = ".json";
+            fileDialog.ShowDialog();
+
+            if (String.IsNullOrWhiteSpace(fileDialog.FileName)) return null;
+            else
+            {
+                File.WriteAllText(fileDialog.FileName, json);
+                return fileDialog.FileName;
+            }
         }
     }
 }
