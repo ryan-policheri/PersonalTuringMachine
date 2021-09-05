@@ -64,8 +64,8 @@ namespace PersonalTuringMachine.ViewModel
                 int index = GetIndexOfHeadCell();
                 if (index < Cells.Count - 1)
                 {
-                    Cells[index].HasHead = false;
                     Cells[index + 1].HasHead = true;
+                    Cells[index].HasHead = false;
                 }
             }
             if (moveSymbol.Symbol == 'L')
@@ -73,8 +73,8 @@ namespace PersonalTuringMachine.ViewModel
                 int index = GetIndexOfHeadCell();
                 if (index > 0)
                 {
-                    Cells[index].HasHead = false;
                     Cells[index - 1].HasHead = true;
+                    Cells[index].HasHead = false;
                 }
             }
         }

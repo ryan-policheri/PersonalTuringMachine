@@ -16,11 +16,13 @@ namespace PersonalTuringMachine.ViewModel
         private const string _startState = "Qstart";
         private const string _haltState = "Qhalt";
         private readonly Timer _timer;
+        private SynchronizationContext _context;
 
         public PtmViewModel(char[] alphabet, char startSymbol, char emptySymbol, IEnumerable<TapeViewModel> initialTapes, IEnumerable<StateViewModel> initialStates, IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
         {
             if (alphabet == null) throw new ArgumentNullException();
             if (!alphabet.Contains(startSymbol) || !alphabet.Contains(emptySymbol)) throw new ArgumentOutOfRangeException("Alphabet does not contain start or empty symbol");
+            _context = SynchronizationContext.Current;
             _timer = new Timer(OnTick, this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
             Alphabet = alphabet;
@@ -216,35 +218,40 @@ namespace PersonalTuringMachine.ViewModel
             double fraction = subtractOne / 20f; //20 is max value
             double inverseFraction = 1 - fraction;
             int milliseconds = (int)(inverseFraction * 1000);
-            return milliseconds * 1000;
+            return milliseconds;
         }
 
         private void OnTick(object stateInfo)
         {
-            CurrentTransitionFunction = GetCurrentTransitionFunction();
-            if (CurrentTransitionFunction == null)
+            _context.Post(stateInfo =>
             {
-                var function = new TransitionFunctionViewModel(Alphabet, Tapes, States);
-                char[] tapeValues = ReadTapeValues();
-                function.AddInputState(this.CurrentState, tapeValues);
-                //this.OpenInModal(function, (exitCode) =>
-                //{
-                //    if (exitCode == ExitCode.Saved) TransitionFunctions.Add(function);
-                //    OnTick(stateInfo);
-                //});
-            }
-            else
-            {
-                CurrentState = CurrentTransitionFunction.SelectedOutputState;
-                for (int i = 0; i < Tapes.Count; i++)
+                CurrentTransitionFunction = GetCurrentTransitionFunction();
+                if (CurrentTransitionFunction == null)
                 {
-                    Tapes[i].WriteHeadValue(CurrentTransitionFunction.OutputHeadWriteArgs[i].ReadWriteValue);
+                    var function = new TransitionFunctionViewModel(Alphabet, Tapes, States);
+                    char[] tapeValues = ReadTapeValues();
+                    function.AddInputState(this.CurrentState, tapeValues);
+                    _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+                    this.OpenInModal(function, (exitCode) =>
+                    {
+                        if (exitCode == ExitCode.Saved) TransitionFunctions.Add(function);
+                        OnTick(stateInfo);
+                    });
+                    _timer.Change(0, CalculateTickSpeed());
                 }
-                for (int i = 0; i < Tapes.Count; i++)
+                else
                 {
-                    Tapes[i].MoveHead(CurrentTransitionFunction.OutputHeadMoveArgs[i].SelectedMoveSymbol);
+                    CurrentState = CurrentTransitionFunction.SelectedOutputState;
+                    for (int i = 0; i < Tapes.Count; i++)
+                    {
+                        Tapes[i].WriteHeadValue(CurrentTransitionFunction.OutputHeadWriteArgs[i].ReadWriteValue);
+                    }
+                    for (int i = 0; i < Tapes.Count; i++)
+                    {
+                        Tapes[i].MoveHead(CurrentTransitionFunction.OutputHeadMoveArgs[i].SelectedMoveSymbol);
+                    }
                 }
-            }
+            }, null);
         }
 
         private TransitionFunctionViewModel GetCurrentTransitionFunction()
@@ -254,7 +261,7 @@ namespace PersonalTuringMachine.ViewModel
             foreach (TransitionFunctionViewModel function in TransitionFunctions)
             {
                 bool matchesState = function.IsMatch(this.CurrentState, tapeValues);
-                return function;
+                if (matchesState) return function;
             }
 
             return null;
