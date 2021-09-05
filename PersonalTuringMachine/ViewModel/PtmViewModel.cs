@@ -259,7 +259,6 @@ namespace PersonalTuringMachine.ViewModel
                     this.OpenInModal(function, (exitCode) =>
                     {
                         if (exitCode == ExitCode.Saved) TransitionFunctions.Add(function);
-                        OnTick(stateInfo);
                     });
                     _timer.Change(0, CalculateTickSpeed());
                 }
@@ -276,6 +275,7 @@ namespace PersonalTuringMachine.ViewModel
                     }
 
                     StepCount++;
+                    if (CurrentState.Name == _haltState) OnToggleMachineOnOff();
                 }
             }, null);
         }
