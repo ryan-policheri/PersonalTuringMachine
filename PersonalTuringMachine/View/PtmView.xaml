@@ -62,7 +62,9 @@
             <ListBox ItemsSource="{Binding TransitionFunctions}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModel:TransitionFunctionViewModel}">
-                        <TextBlock Text="{Binding DisplayStatement}" />
+                        <Button Background="Transparent" BorderThickness="0" ToolTip="Double click to edit" MouseDoubleClick="TransitionFunction_MouseDoubleClick">
+                            <TextBlock Text="{Binding DisplayStatement}"/>
+                        </Button>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

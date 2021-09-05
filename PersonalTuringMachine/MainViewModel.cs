@@ -73,7 +73,7 @@ namespace PersonalTuringMachine
 
         private void OnSaveMachine()
         {
-            if (!String.IsNullOrWhiteSpace(_currentInputFile))
+            if (!String.IsNullOrWhiteSpace(_currentMachineFile))
             {
                 MachineSpec spec = Ptm.GetMachineSpec();
                 File.WriteAllText(_currentMachineFile, spec.ToJson());
@@ -168,6 +168,8 @@ namespace PersonalTuringMachine
 
                 PtmViewModel viewModel = new PtmViewModel(spec.Alphabet, spec.StartSymbol, spec.EmptySymbol, tapes, states, transitionFunctions);
                 Ptm = viewModel;
+
+                _currentMachineFile = file;
             }
         }
 
@@ -180,6 +182,8 @@ namespace PersonalTuringMachine
                 char[] input = json.ConvertJsonToObject<char[]>();
                 Ptm.LoadInputOntoTape(input);
             }
+
+            _currentInputFile = file;
         }
 
         private string GetFilePathDialog(string folder)

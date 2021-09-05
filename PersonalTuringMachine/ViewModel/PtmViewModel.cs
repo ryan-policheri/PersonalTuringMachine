@@ -52,6 +52,21 @@ namespace PersonalTuringMachine.ViewModel
 
         public ICommand AddTransitionFunction { get; }
 
+        public void EditTransitionFunction(TransitionFunctionViewModel funcViewModel)
+        {
+            TransitionFunctionViewModel copied = funcViewModel.Copy();
+
+            this.OpenInModal(copied, (exitCode) =>
+            {
+                if (exitCode == ExitCode.Saved)
+                {
+                    int index = TransitionFunctions.IndexOf(funcViewModel);
+                    TransitionFunctions.Insert(index, copied);
+                    TransitionFunctions.Remove(funcViewModel);
+                }
+            });
+        }
+
         public MachineSpec GetMachineSpec()
         {
             MachineSpec machineSpec = new MachineSpec

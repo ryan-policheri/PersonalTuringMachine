@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using PersonalTuringMachine.ViewModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PersonalTuringMachine.View
 {
-    /// <summary>
-    /// Interaction logic for PtmView.xaml
-    /// </summary>
     public partial class PtmView : UserControl
     {
         public PtmView()
         {
             InitializeComponent();
+        }
+
+        private PtmViewModel ViewModel => (this.DataContext as PtmViewModel);
+
+        private void TransitionFunction_MouseDoubleClick(object sender, MouseButtonEventArgs args)
+        {
+            TransitionFunctionViewModel funcViewModel = (sender as Button)?.DataContext as TransitionFunctionViewModel;
+            if(funcViewModel != null && ViewModel != null) { ViewModel.EditTransitionFunction(funcViewModel); }
         }
     }
 }
