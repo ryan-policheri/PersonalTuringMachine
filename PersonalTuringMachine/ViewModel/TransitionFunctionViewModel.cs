@@ -66,6 +66,25 @@ namespace PersonalTuringMachine.ViewModel
 
         public string DisplayStatement => BuildDisplayStatement();
 
+        public bool IsMatch(StateViewModel inputState, char[] tapeValues)
+        {
+            if (SelectedInputState.Name == inputState.Name)
+            {
+                char[] inputArgs = InputHeadReadArgs.Select(x => x.ReadWriteValue).ToArray();
+                return Enumerable.SequenceEqual(inputArgs, tapeValues);
+            }
+            else return false;
+        }
+
+        public void AddInputState(StateViewModel currentState, char[] tapeValues)
+        {
+            this.SelectedInputState = currentState;
+            for (int i = 0; i < tapeValues.Length; i++)
+            {
+                this.InputHeadReadArgs[i].ReadWriteValue = tapeValues[i];
+            }
+        }
+
         private string BuildDisplayStatement()
         {
             StringBuilder builder = new StringBuilder();

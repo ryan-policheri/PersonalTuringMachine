@@ -48,7 +48,44 @@
             <Button Content="Add +" FontSize="14" FontWeight="Bold" Command="{Binding AddState}"/>
         </StackPanel>
 
-        <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="3">
+        <Grid Grid.Row="3" Grid.Column="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ToggleButton Grid.Row="0" Grid.Column="1" Content="{Binding MachineOnOffDisplay}" Padding="10" Margin="10" FontWeight="Bold" Command="{Binding ToggleMachineOnOff}"/>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 5" Text="Execution Speed" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <Slider Padding="10" Minimum="1" Maximum="20" AutoToolTipPlacement="TopLeft" Value="{Binding ExecutionSpeed}" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 5" Text="Current State" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10" Text="{Binding CurrentState.Name}" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 5" Text="Current Transition Function" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10" Text="{Binding CurrentTransitionFunction.DisplayStatement}" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 5" Text="Runtime Complexity" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10" Text="O(n^2)" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3">
             <TextBlock Text="Transition Functions" FontSize="14" FontWeight="Bold" />
             <TextBlock FontSize="14" FontWeight="Bold">
                 <Run Text="S: Q x Γ" />

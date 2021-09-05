@@ -47,6 +47,53 @@ namespace PersonalTuringMachine.ViewModel
             cell.PropertyChanged += Cell_PropertyChanged;
         }
 
+        public char ReadHeadValue()
+        {
+            return GetCellWithHead().Value;
+        }
+
+        public void WriteHeadValue(char value)
+        {
+            GetCellWithHead().Value = value;
+        }
+
+        public void MoveHead(HeadMoveSymbol moveSymbol)
+        {
+            if (moveSymbol.Symbol == 'R')
+            {
+                int index = GetIndexOfHeadCell();
+                if (index < Cells.Count - 1)
+                {
+                    Cells[index].HasHead = false;
+                    Cells[index + 1].HasHead = true;
+                }
+            }
+            if (moveSymbol.Symbol == 'L')
+            {
+                int index = GetIndexOfHeadCell();
+                if (index > 0)
+                {
+                    Cells[index].HasHead = false;
+                    Cells[index - 1].HasHead = true;
+                }
+            }
+        }
+
+        private CellViewModel GetCellWithHead()
+        {
+            foreach (CellViewModel cell in Cells) { if (cell.HasHead) return cell; }
+            throw new InvalidOperationException("There should be a head on the tape");
+        }
+
+        private int GetIndexOfHeadCell()
+        {
+            for (int i = 0; i < Cells.Count; i++)
+            {
+                if (Cells[i].HasHead) return i;
+            }
+            throw new InvalidOperationException("There should be a head on the tape");
+        }
+
         private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             if(args.PropertyName == nameof(CellViewModel.Value))

@@ -5,17 +5,23 @@ using PersonalTuringMachine.CommandBinding;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
+using System.Threading;
 using PersonalTuringMachine.Model;
 
 namespace PersonalTuringMachine.ViewModel
 {
     public class PtmViewModel : ViewModelBase
     {
+        private const string _startState = "Qstart";
+        private const string _haltState = "Qhalt";
+        private readonly Timer _timer;
+
         public PtmViewModel(char[] alphabet, char startSymbol, char emptySymbol, IEnumerable<TapeViewModel> initialTapes, IEnumerable<StateViewModel> initialStates, IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
         {
             if (alphabet == null) throw new ArgumentNullException();
             if (!alphabet.Contains(startSymbol) || !alphabet.Contains(emptySymbol)) throw new ArgumentOutOfRangeException("Alphabet does not contain start or empty symbol");
-
+            _timer = new Timer(OnTick, this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
             Alphabet = alphabet;
             StartSymbol = startSymbol;
@@ -32,7 +38,11 @@ namespace PersonalTuringMachine.ViewModel
             DeleteTape = new DelegateCommand<TapeViewModel>(OnDeleteTape);
             AddState = new DelegateCommand(OnAddState);
             AddTransitionFunction = new DelegateCommand(OnAddTransitionFunction);
-            CalculateAllTransitionFunctions();
+            ToggleMachineOnOff = new DelegateCommand(OnToggleMachineOnOff);
+
+            MachineOn = false;
+            CurrentState = States.Where(x => x.Name == _startState).FirstOrDefault();
+            ExecutionSpeed = 5;
         }
 
         public char[] Alphabet { get; }
@@ -54,6 +64,55 @@ namespace PersonalTuringMachine.ViewModel
         public ICommand AddState { get; }
 
         public ICommand AddTransitionFunction { get; }
+
+        public ICommand ToggleMachineOnOff { get; }
+
+
+        private bool _machineOn;
+        public bool MachineOn
+        {
+            get { return _machineOn; }
+            set
+            {
+                SetField(ref _machineOn, value);
+                OnPropertyChanged(nameof(MachineOnOffDisplay));
+            }
+        }
+
+        private string _machineOnOffDisplay;
+        public string MachineOnOffDisplay
+        {
+            get
+            {
+                if (MachineOn) return "Stop Machine";
+                else return "Start Machine";
+            }
+        }
+
+        private StateViewModel _currentState;
+        public StateViewModel CurrentState
+        {
+            get { return _currentState; }
+            private set { SetField(ref _currentState, value); }
+        }
+
+        private int _executionSpeed;
+        public int ExecutionSpeed
+        {
+            get { return _executionSpeed; }
+            set
+            {
+                SetField(ref _executionSpeed, value);
+                if (MachineOn) _timer.Change(0, CalculateTickSpeed());
+            }
+        }
+
+        private TransitionFunctionViewModel _currentTransitionFunction;
+        public TransitionFunctionViewModel CurrentTransitionFunction
+        {
+            get { return _currentTransitionFunction; }
+            set { SetField(ref _currentTransitionFunction, value); }
+        }
 
         public void EditTransitionFunction(TransitionFunctionViewModel funcViewModel)
         {
@@ -116,7 +175,6 @@ namespace PersonalTuringMachine.ViewModel
             Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol, true) }));
         }
 
-
         private void OnDeleteTape(TapeViewModel obj)
         {
             Tapes.Remove(obj);
@@ -133,7 +191,6 @@ namespace PersonalTuringMachine.ViewModel
                 newStateName = newStateName + counter;
             }
             States.Add(new StateViewModel(newStateName, true));
-            CalculateAllTransitionFunctions();
         }
 
         private void OnAddTransitionFunction()
@@ -146,21 +203,72 @@ namespace PersonalTuringMachine.ViewModel
             });
         }
 
-        private void CalculateAllTransitionFunctions()
+        private void OnToggleMachineOnOff()
         {
-            //Turns out this is difficult...
-            //    TransitionFunctions.Clear();
+            MachineOn = !MachineOn;
+            if (MachineOn) _timer.Change(0, CalculateTickSpeed());
+            else _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
 
-            //    foreach (StateViewModel state in States)
-            //    {
-            //        List<string> inputArray = new List<string>();
-            //        inputArray.Add(state.Name);
-            //        int[] alphabetTapeCounter = new int[Tapes.Count];
-            //        AppendAlphabetToInput(inputArray, alphabetTapeCounter);
+        private int CalculateTickSpeed()
+        {
+            int subtractOne = ExecutionSpeed - 1;
+            double fraction = subtractOne / 20f; //20 is max value
+            double inverseFraction = 1 - fraction;
+            int milliseconds = (int)(inverseFraction * 1000);
+            return milliseconds * 1000;
+        }
 
-            //        int[] data = new int[Tapes.Count];
-            //        CombinationUtil(Alphabet, Alphabet.Length, Tapes.Count, 0, data, 0);
-            //    }
+        private void OnTick(object stateInfo)
+        {
+            CurrentTransitionFunction = GetCurrentTransitionFunction();
+            if (CurrentTransitionFunction == null)
+            {
+                var function = new TransitionFunctionViewModel(Alphabet, Tapes, States);
+                char[] tapeValues = ReadTapeValues();
+                function.AddInputState(this.CurrentState, tapeValues);
+                //this.OpenInModal(function, (exitCode) =>
+                //{
+                //    if (exitCode == ExitCode.Saved) TransitionFunctions.Add(function);
+                //    OnTick(stateInfo);
+                //});
+            }
+            else
+            {
+                CurrentState = CurrentTransitionFunction.SelectedOutputState;
+                for (int i = 0; i < Tapes.Count; i++)
+                {
+                    Tapes[i].WriteHeadValue(CurrentTransitionFunction.OutputHeadWriteArgs[i].ReadWriteValue);
+                }
+                for (int i = 0; i < Tapes.Count; i++)
+                {
+                    Tapes[i].MoveHead(CurrentTransitionFunction.OutputHeadMoveArgs[i].SelectedMoveSymbol);
+                }
+            }
+        }
+
+        private TransitionFunctionViewModel GetCurrentTransitionFunction()
+        {
+            char[] tapeValues = ReadTapeValues();
+
+            foreach (TransitionFunctionViewModel function in TransitionFunctions)
+            {
+                bool matchesState = function.IsMatch(this.CurrentState, tapeValues);
+                return function;
+            }
+
+            return null;
+        }
+
+        private char[] ReadTapeValues()
+        {
+            ICollection<char> values = new List<char>();
+            foreach (TapeViewModel tape in Tapes)
+            {
+                values.Add(tape.ReadHeadValue());
+            }
+
+            return values.ToArray();
         }
     }
 }
