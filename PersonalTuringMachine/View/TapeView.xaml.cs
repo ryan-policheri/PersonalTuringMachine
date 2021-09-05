@@ -1,4 +1,5 @@
-﻿using PersonalTuringMachine.Extensions;
+﻿using PersonalTuringMachine.CommandBinding;
+using PersonalTuringMachine.Extensions;
 using PersonalTuringMachine.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,23 @@ namespace PersonalTuringMachine.View
         private ListBox _cellList;
         private Window _currentWindow;
 
+        private TapeViewModel _viewModel => this.DataContext as TapeViewModel;
+
         public TapeView()
         {
             InitializeComponent();
             Loaded += TapeView_Loaded;
         }
+
+        public ICommand OnDelete
+        {
+            get { return (ICommand)GetValue(OnDeleteProperty); }
+            set { SetValue(OnDeleteProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OnDelete.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OnDeleteProperty =
+            DependencyProperty.Register("OnDelete", typeof(ICommand), typeof(TapeView));
 
         private void TapeView_Loaded(object sender, RoutedEventArgs args)
         {
@@ -86,6 +99,14 @@ namespace PersonalTuringMachine.View
                         }
                     }
                 }
+            }
+        }
+
+        private void DeleteTape_Click(object sender, RoutedEventArgs args)
+        {
+            if(this._viewModel != null && OnDelete != null)
+            {
+                OnDelete.Execute(this._viewModel);
             }
         }
     }

@@ -21,8 +21,11 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding LongName}" FontWeight="Bold"/>
+
+            <DockPanel Grid.Row="0" Grid.Column="0">
+                <TextBlock Text="{Binding LongName}" FontWeight="Bold"/>
+                <Button Content="X" ToolTip="Delete Tape" FontSize="12" FontWeight="Bold" Click="DeleteTape_Click" Margin="10 0 0 5" MaxWidth="25" HorizontalAlignment="Left"/>
+            </DockPanel>
 
             <ListBox x:Name="CellList" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Cells}">
                 <ListBox.ItemsPanel>
@@ -32,8 +35,11 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewModel:CellViewModel}">
-                        <TextBox Text="{Binding Value, Mode=TwoWay, Converter={StaticResource stringToChar}}" IsReadOnly="{Binding IsReadOnly}" FontSize="12" Padding="2.5"
+                        <StackPanel>
+                            <Image Source="..\Resources\down-arrow.png" Height="10" Width="10" Visibility="{Binding HasHead, Converter={StaticResource boolToVisibility}}"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, Converter={StaticResource stringToChar}}" IsReadOnly="{Binding IsReadOnly}" FontSize="12" Padding="2.5" 
                                  GotFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotMouseCapture" IsMouseCaptureWithinChanged="TextBox_IsMouseCaptureWithinChanged" PreviewKeyDown="TextBox_KeyDown"/>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>

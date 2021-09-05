@@ -29,7 +29,7 @@
         <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 10 0 0" ItemsSource="{Binding Tapes}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type viewModel:TapeViewModel}">
-                    <view:TapeView/>
+                    <view:TapeView OnDelete="{Binding Path=DataContext.DeleteTape, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

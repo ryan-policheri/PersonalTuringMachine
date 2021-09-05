@@ -6,10 +6,11 @@ namespace PersonalTuringMachine.ViewModel
     {
         private char[] _alphabet;
 
-        public CellViewModel(char[] alphabet, char initialValue)
+        public CellViewModel(char[] alphabet, char initialValue, bool hasHead = false)
         {
             _alphabet = alphabet;
             Value = initialValue;
+            HasHead = hasHead;
         }
 
         private char _value;
@@ -27,6 +28,13 @@ namespace PersonalTuringMachine.ViewModel
         {
             get { return _isReadOnly; }
             set { SetField(ref _isReadOnly, value); }
+        }
+
+        private bool _hasHead;
+        public bool HasHead 
+        {
+            get { return _hasHead; }
+            set { SetField(ref _hasHead, value); }
         }
     }
 }

@@ -7,11 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\down-arrow.png" />
     <None Remove="Resources\TapeCell.png" />
     <None Remove="Resources\TuringMachine.jpg" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\down-arrow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\TapeCell.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

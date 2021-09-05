@@ -20,7 +20,7 @@ namespace PersonalTuringMachine.ViewModel
             EmptySymbol = emptySymbol;
 
             Cells = new ObservableCollection<CellViewModel>();
-            if (initialCells != null) { foreach (CellViewModel cell in initialCells) { AddCell(cell.Value); } }
+            if (initialCells != null) { foreach (CellViewModel cell in initialCells) { AddCell(cell.Value, cell.HasHead); } }
             MaintainEmptyCellBuffer();
         }
 
@@ -40,9 +40,9 @@ namespace PersonalTuringMachine.ViewModel
 
         public void Clear() => Cells.Clear();
 
-        public void AddCell(char value)
+        public void AddCell(char value, bool hasHead = false)
         {
-            CellViewModel cell = new CellViewModel(_alphabet, value);
+            CellViewModel cell = new CellViewModel(_alphabet, value, hasHead);
             Cells.Add(cell);
             cell.PropertyChanged += Cell_PropertyChanged;
         }

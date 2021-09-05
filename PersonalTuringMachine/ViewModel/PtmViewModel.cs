@@ -29,6 +29,7 @@ namespace PersonalTuringMachine.ViewModel
             if (initialTransitionFunctions != null) { foreach (TransitionFunctionViewModel func in initialTransitionFunctions) { TransitionFunctions.Add(func); } }
 
             AddTape = new DelegateCommand(OnAddTape);
+            DeleteTape = new DelegateCommand<TapeViewModel>(OnDeleteTape);
             AddState = new DelegateCommand(OnAddState);
             AddTransitionFunction = new DelegateCommand(OnAddTransitionFunction);
             CalculateAllTransitionFunctions();
@@ -47,6 +48,8 @@ namespace PersonalTuringMachine.ViewModel
         public ObservableCollection<TransitionFunctionViewModel> TransitionFunctions { get; }
 
         public ICommand AddTape { get; }
+
+        public ICommand DeleteTape { get; }
 
         public ICommand AddState { get; }
 
@@ -110,7 +113,13 @@ namespace PersonalTuringMachine.ViewModel
 
         private void OnAddTape()
         {
-            Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol) }));
+            Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol, true) }));
+        }
+
+
+        private void OnDeleteTape(TapeViewModel obj)
+        {
+            Tapes.Remove(obj);
         }
 
         private void OnAddState()

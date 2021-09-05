@@ -57,9 +57,9 @@ namespace PersonalTuringMachine
         {
             char[] alphabet = { '>', '1', '0', '□' };
             IEnumerable<TapeViewModel> tapes = new List<TapeViewModel> {
-                new TapeViewModel(1, TapeType.ReadOnly, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0]) }),
-                new TapeViewModel(2, TapeType.ReadWrite, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0]) }),
-                new TapeViewModel(3, TapeType.ReadWrite, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0]) })
+                new TapeViewModel(1, TapeType.ReadOnly, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0], true) }),
+                new TapeViewModel(2, TapeType.ReadWrite, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0], true) }),
+                new TapeViewModel(3, TapeType.ReadWrite, alphabet, alphabet[3], new List<CellViewModel>{ new CellViewModel(alphabet, alphabet[0], true) })
             };
 
             IEnumerable<StateViewModel> states = new List<StateViewModel> {
@@ -131,7 +131,7 @@ namespace PersonalTuringMachine
                 ICollection<TapeViewModel> tapes = new List<TapeViewModel>();
                 foreach (TapeSaveModel tapeSaveModel in spec.Tapes)
                 {
-                    tapes.Add(new TapeViewModel(tapeSaveModel.Number, tapeSaveModel.Type, spec.Alphabet, spec.EmptySymbol, new List<CellViewModel> { new CellViewModel(spec.Alphabet, spec.StartSymbol) }));
+                    tapes.Add(new TapeViewModel(tapeSaveModel.Number, tapeSaveModel.Type, spec.Alphabet, spec.EmptySymbol, new List<CellViewModel> { new CellViewModel(spec.Alphabet, spec.StartSymbol, true) }));
                 }
 
                 ICollection<StateViewModel> states = new List<StateViewModel>();
