@@ -33,6 +33,15 @@ namespace PersonalTuringMachine.ViewModel
             TransitionFunctions = new ObservableCollection<TransitionFunctionViewModel>();
 
             if (initialTapes != null) { foreach (TapeViewModel tape in initialTapes) { Tapes.Add(tape); } }
+
+            if (Tapes != null && Tapes.Count > 0)
+            {
+                Tapes.First().PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == nameof(TapeViewModel.ActiveCellCount)) OnPropertyChanged(nameof(InputLength));
+                };
+            }
+
             if (initialStates != null) { foreach (StateViewModel state in initialStates) { States.Add(state); } }
             if (initialTransitionFunctions != null) { foreach (TransitionFunctionViewModel func in initialTransitionFunctions) { TransitionFunctions.Add(func); } }
 
@@ -114,6 +123,21 @@ namespace PersonalTuringMachine.ViewModel
         {
             get { return _currentTransitionFunction; }
             set { SetField(ref _currentTransitionFunction, value); }
+        }
+
+        public int InputLength
+        {
+            get
+            {
+                if (Tapes == null || Tapes.Count == 0) return 0;
+                else return Tapes.First().GetLastValueIndex() + 1;
+            }
+        }
+
+        private int _stepCount;
+        public int StepCount
+        {
+            get { return _stepCount; } private set { SetField(ref _stepCount, value); }
         }
 
         public void EditTransitionFunction(TransitionFunctionViewModel funcViewModel)
@@ -250,6 +274,8 @@ namespace PersonalTuringMachine.ViewModel
                     {
                         Tapes[i].MoveHead(CurrentTransitionFunction.OutputHeadMoveArgs[i].SelectedMoveSymbol);
                     }
+
+                    StepCount++;
                 }
             }, null);
         }

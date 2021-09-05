@@ -38,6 +38,9 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<CellViewModel> Cells { get; }
 
+        private int _activeCellCount;
+        public int ActiveCellCount => GetLastValueIndex() + 1;
+
         public void Clear() => Cells.Clear();
 
         public void AddCell(char value, bool hasHead = false)
@@ -79,6 +82,16 @@ namespace PersonalTuringMachine.ViewModel
             }
         }
 
+        public int GetLastValueIndex()
+        {
+            for (int i = Cells.Count - 1; i >= 0; i--) //Find last non-empty value
+            {
+                if (Cells[i].Value != EmptySymbol) return i;
+            }
+
+            return 0;
+        }
+
         private CellViewModel GetCellWithHead()
         {
             foreach (CellViewModel cell in Cells) { if (cell.HasHead) return cell; }
@@ -96,27 +109,19 @@ namespace PersonalTuringMachine.ViewModel
 
         private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs args)
         {
-            if(args.PropertyName == nameof(CellViewModel.Value))
+            if (args.PropertyName == nameof(CellViewModel.Value))
             {
                 MaintainEmptyCellBuffer();
+                OnPropertyChanged(nameof(ActiveCellCount));
             }
         }
 
         private void MaintainEmptyCellBuffer() //Create a buffer of 50 empty cells at the end to keep the appearance of infinity
         {
-            for (int i = Cells.Count - 1; i >= 0; i--) //Find last non-empty value
-            {
-                if (Cells[i].Value != EmptySymbol)
-                {
-                    int desiredLength = i + _emptyCellBuffer;
-                    int cellsToAdd = desiredLength - Cells.Count;
-                    for (int j = 0; j <= cellsToAdd; j++)
-                    {
-                        AddCell(EmptySymbol);
-                    }
-                    break;
-                }
-            }
+            int i = GetLastValueIndex();
+            int desiredLength = i + _emptyCellBuffer;
+            int cellsToAdd = desiredLength - Cells.Count;
+            for (int j = 0; j <= cellsToAdd; j++) AddCell(EmptySymbol);
         }
     }
 }

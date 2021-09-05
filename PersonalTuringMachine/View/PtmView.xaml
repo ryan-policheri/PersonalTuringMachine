@@ -55,6 +55,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -69,23 +71,33 @@
                 <Slider Padding="10" Minimum="1" Maximum="20" AutoToolTipPlacement="TopLeft" Value="{Binding ExecutionSpeed}" HorizontalAlignment="Stretch"/>
             </StackPanel>
 
-            <StackPanel Grid.Row="2" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
-                <TextBlock Padding="10 0 10 5" Text="Current State" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Padding="10" Text="{Binding CurrentState.Name}" HorizontalAlignment="Center"/>
-            </StackPanel>
+            <DockPanel Grid.Row="2" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 0" Text="Current State:" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10 0 10 0" Text="{Binding CurrentState.Name}" HorizontalAlignment="Center"/>
+            </DockPanel>
 
-            <StackPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
-                <TextBlock Padding="10 0 10 5" Text="Current Transition Function" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Padding="10" Text="{Binding CurrentTransitionFunction.DisplayStatement}" HorizontalAlignment="Center"/>
-            </StackPanel>
+            <DockPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 5" Text="Current Transition Function:" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10 0 10 0" Text="{Binding CurrentTransitionFunction.DisplayStatement}" HorizontalAlignment="Center"/>
+            </DockPanel>
 
-            <StackPanel Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
-                <TextBlock Padding="10 0 10 5" Text="Runtime Complexity" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Padding="10" Text="O(n^2)" HorizontalAlignment="Center"/>
-            </StackPanel>
+            <DockPanel Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 0" Text="Input Length" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10 0 10 0" Text="{Binding InputLength}" HorizontalAlignment="Center"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="5" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 0" Text="Total Steps" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10 0 10 0" Text="{Binding StepCount}" HorizontalAlignment="Center"/>
+            </DockPanel>
+
+            <DockPanel Grid.Row="6" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+                <TextBlock Padding="10 0 10 0" Text="Runtime Complexity" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Padding="10 0 10 0" Text="O(n^2)" HorizontalAlignment="Center"/>
+            </DockPanel>
         </Grid>
 
-        <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="3">
+        <StackPanel Grid.Row="3" Grid.Column="2">
             <TextBlock Text="Transition Functions" FontSize="14" FontWeight="Bold" />
             <TextBlock FontSize="14" FontWeight="Bold">
                 <Run Text="S: Q x Γ" />
