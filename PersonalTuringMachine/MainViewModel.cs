@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace PersonalTuringMachine
 {
-    public class MainViewModel
+    public class MainViewModel : ViewModelBase
     {
         private readonly string _appFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PersonalTuringMachine");
         private string _machinesFolder => Path.Combine(_appFolderPath, "Machines");
@@ -34,7 +34,12 @@ namespace PersonalTuringMachine
             Directory.CreateDirectory(_inputsFolder);
         }
 
-        public PtmViewModel Ptm { get; private set; }
+        private PtmViewModel _ptm;
+        public PtmViewModel Ptm
+        {
+            get { return _ptm; }
+            private set { SetField(ref _ptm, value); }
+        }
 
         public ICommand SaveMachine { get; }
 
@@ -126,7 +131,7 @@ namespace PersonalTuringMachine
                 ICollection<TapeViewModel> tapes = new List<TapeViewModel>();
                 foreach (TapeSaveModel tapeSaveModel in spec.Tapes)
                 {
-                    tapes.Add(new TapeViewModel(tapeSaveModel.Number, tapeSaveModel.Type, spec.Alphabet, spec.EmptySymbol, null));
+                    tapes.Add(new TapeViewModel(tapeSaveModel.Number, tapeSaveModel.Type, spec.Alphabet, spec.EmptySymbol, new List<CellViewModel> { new CellViewModel(spec.Alphabet, spec.StartSymbol) }));
                 }
 
                 ICollection<StateViewModel> states = new List<StateViewModel>();
@@ -136,18 +141,33 @@ namespace PersonalTuringMachine
                 }
 
                 ICollection<TransitionFunctionViewModel> transitionFunctions = new List<TransitionFunctionViewModel>();
-                foreach (TransitionFunctionSaveModel func in spec.TransitionFunctions)
+                foreach (TransitionFunctionSaveModel savedFunc in spec.TransitionFunctions)
                 {
                     TransitionFunctionViewModel transitionFunctionViewModel = new TransitionFunctionViewModel(spec.Alphabet, tapes.ToObservableCollection(), states.ToObservableCollection());
-                    transitionFunctionViewModel.SelectedInputState = transitionFunctionViewModel.States.Where(x => x.Name == func.InputStateName).FirstOrDefault();
+                    transitionFunctionViewModel.SelectedInputState = transitionFunctionViewModel.States.Where(x => x.Name == savedFunc.InputStateName).FirstOrDefault();
 
                     for (int i = 0; i < transitionFunctionViewModel.InputHeadReadArgs.Count; i++)
                     {
-                        transitionFunctionViewModel.InputHeadReadArgs[i].ReadWriteValue = func.InputHeadReadArgs[i];
+                        transitionFunctionViewModel.InputHeadReadArgs[i].ReadWriteValue = savedFunc.InputHeadReadArgs[i];
                     }
+
+                    transitionFunctionViewModel.SelectedOutputState = transitionFunctionViewModel.States.Where(x => x.Name == savedFunc.OutputStateName).FirstOrDefault();
+
+                    for (int i = 0; i < transitionFunctionViewModel.OutputHeadWriteArgs.Count; i++)
+                    {
+                        transitionFunctionViewModel.OutputHeadWriteArgs[i].ReadWriteValue = savedFunc.OutputWriteArgs[i];
+                    }
+
+                    for (int i = 0; i < transitionFunctionViewModel.OutputHeadMoveArgs.Count; i++)
+                    {
+                        transitionFunctionViewModel.OutputHeadMoveArgs[i].SelectedMoveSymbol = transitionFunctionViewModel.OutputHeadMoveArgs[i].HeadMoveSymbols.Where(x => x.Symbol == savedFunc.OutputMoveArgs[i]).FirstOrDefault();
+                    }
+
+                    transitionFunctions.Add(transitionFunctionViewModel);
                 }
 
-                //PtmViewModel viewModel = new PtmViewModel(spec.Alphabet, spec.StartSymbol, spec.EmptySymbol, tapes, states)
+                PtmViewModel viewModel = new PtmViewModel(spec.Alphabet, spec.StartSymbol, spec.EmptySymbol, tapes, states, transitionFunctions);
+                Ptm = viewModel;
             }
         }
 

@@ -38,7 +38,9 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<CellViewModel> Cells { get; }
 
-        private void AddCell(char value)
+        public void Clear() => Cells.Clear();
+
+        public void AddCell(char value)
         {
             CellViewModel cell = new CellViewModel(_alphabet, value);
             Cells.Add(cell);

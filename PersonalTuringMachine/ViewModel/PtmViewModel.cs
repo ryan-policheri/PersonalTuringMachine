@@ -26,6 +26,7 @@ namespace PersonalTuringMachine.ViewModel
 
             if (initialTapes != null) { foreach (TapeViewModel tape in initialTapes) { Tapes.Add(tape); } }
             if (initialStates != null) { foreach (StateViewModel state in initialStates) { States.Add(state); } }
+            if (initialTransitionFunctions != null) { foreach (TransitionFunctionViewModel func in initialTransitionFunctions) { TransitionFunctions.Add(func); } }
 
             AddTape = new DelegateCommand(OnAddTape);
             AddState = new DelegateCommand(OnAddState);
@@ -88,13 +89,9 @@ namespace PersonalTuringMachine.ViewModel
         public void LoadInputOntoTape(char[] input)
         {
             TapeViewModel readTape = Tapes.Where(x => x.Type == TapeType.ReadOnly).First();
-            readTape.Cells.Clear();
-            foreach(char letter in input)
-            {
-                readTape.Cells.Add(new CellViewModel(Alphabet, letter));
-            }
+            readTape.Clear();
+            foreach (char letter in input) { readTape.AddCell(letter); }
         }
-
 
         private void OnAddTape()
         {
