@@ -17,6 +17,7 @@ namespace PersonalTuringMachine.ViewModel
         private const string _haltState = "Qhalt";
         private readonly Timer _timer;
         private SynchronizationContext _context;
+        private bool _forceTerminateMachine = false;
 
         public PtmViewModel(char[] alphabet, char startSymbol, char emptySymbol, IEnumerable<TapeViewModel> initialTapes, IEnumerable<StateViewModel> initialStates, IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
         {
@@ -236,8 +237,20 @@ namespace PersonalTuringMachine.ViewModel
         private void OnToggleMachineOnOff()
         {
             MachineOn = !MachineOn;
-            if (MachineOn) _timer.Change(0, CalculateTickSpeed());
-            else _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+            if (MachineOn) TurnMachineOn();
+            else TurnMachineOff();
+        }
+
+        private void TurnMachineOff()
+        {
+            MachineOn = false;
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+
+        private void TurnMachineOn()
+        {
+            MachineOn = true;
+            _timer.Change(0, CalculateTickSpeed());
         }
 
         private void OnMachineReset()
@@ -258,6 +271,7 @@ namespace PersonalTuringMachine.ViewModel
 
         private void OnTick(object stateInfo)
         {
+            if (!MachineOn) return;
             _context.Post(stateInfo =>
             {
                 CurrentTransitionFunction = GetCurrentTransitionFunction();
@@ -269,9 +283,13 @@ namespace PersonalTuringMachine.ViewModel
                     _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
                     this.OpenInModal(function, (exitCode) =>
                     {
-                        if (exitCode == ExitCode.Saved) TransitionFunctions.Add(function);
+                        if (exitCode == ExitCode.Saved)
+                        {
+                            TransitionFunctions.Add(function);
+                            TurnMachineOn();
+                        }
+                        else TurnMachineOff();
                     });
-                    _timer.Change(0, CalculateTickSpeed());
                 }
                 else
                 {
