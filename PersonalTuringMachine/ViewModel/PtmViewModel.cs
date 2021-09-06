@@ -50,6 +50,7 @@ namespace PersonalTuringMachine.ViewModel
             AddState = new DelegateCommand(OnAddState);
             AddTransitionFunction = new DelegateCommand(OnAddTransitionFunction);
             ToggleMachineOnOff = new DelegateCommand(OnToggleMachineOnOff);
+            ResetMachine = new DelegateCommand(OnMachineReset);
 
             MachineOn = false;
             CurrentState = States.Where(x => x.Name == _startState).FirstOrDefault();
@@ -77,6 +78,8 @@ namespace PersonalTuringMachine.ViewModel
         public ICommand AddTransitionFunction { get; }
 
         public ICommand ToggleMachineOnOff { get; }
+
+        public ICommand ResetMachine { get; }
 
 
         private bool _machineOn;
@@ -235,6 +238,13 @@ namespace PersonalTuringMachine.ViewModel
             MachineOn = !MachineOn;
             if (MachineOn) _timer.Change(0, CalculateTickSpeed());
             else _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+        }
+
+        private void OnMachineReset()
+        {
+            foreach (var tape in Tapes) { tape.MoveHeadTo(0); }
+            CurrentState = States.Where(x => x.Name == _startState).FirstOrDefault();
+            StepCount = 0;
         }
 
         private int CalculateTickSpeed()

@@ -57,6 +57,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -66,34 +67,36 @@
 
             <ToggleButton Grid.Row="0" Grid.Column="1" Content="{Binding MachineOnOffDisplay}" Padding="10" Margin="10" FontWeight="Bold" Command="{Binding ToggleMachineOnOff}"/>
 
-            <StackPanel Grid.Row="1" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <Button Grid.Row="1" Grid.Column="1" Content="Reset Heads" Command="{Binding ResetMachine}"/>
+
+            <StackPanel Grid.Row="2" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 5" Text="Execution Speed" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <Slider Padding="10" Minimum="1" Maximum="20" AutoToolTipPlacement="TopLeft" Value="{Binding ExecutionSpeed}" HorizontalAlignment="Stretch"/>
             </StackPanel>
 
-            <DockPanel Grid.Row="2" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 0" Text="Current State:" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Padding="10 0 10 0" Text="{Binding CurrentState.Name}" HorizontalAlignment="Center"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="3" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 5" Text="Current Transition Function:" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Padding="10 0 10 0" Text="{Binding CurrentTransitionFunction.DisplayStatement}" HorizontalAlignment="Center"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="5" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 0" Text="Input Length" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Padding="10 0 10 0" Text="{Binding InputLength}" HorizontalAlignment="Center"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="5" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="6" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 0" Text="Total Steps" FontWeight="Bold" HorizontalAlignment="Center"/>
                 <TextBlock Padding="10 0 10 0" Text="{Binding StepCount}" HorizontalAlignment="Center"/>
             </DockPanel>
 
-            <DockPanel Grid.Row="6" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
+            <DockPanel Grid.Row="7" Grid.Column="1" Margin="10" HorizontalAlignment="Center">
                 <TextBlock Padding="10 0 10 0" Text="Runtime Complexity" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Padding="10 0 10 0" Text="Calculating..." HorizontalAlignment="Center"/>
+                <TextBox Padding="10 0 10 0" Text="Calculating..." HorizontalAlignment="Center"/>
             </DockPanel>
         </Grid>
 

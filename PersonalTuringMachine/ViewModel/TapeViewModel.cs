@@ -49,6 +49,7 @@ namespace PersonalTuringMachine.ViewModel
             CellViewModel cell = new CellViewModel(_alphabet, value, hasHead);
             Cells.Add(cell);
             cell.PropertyChanged += Cell_PropertyChanged;
+            OnPropertyChanged(nameof(ActiveCellCount));
         }
 
         public char ReadHeadValue()
@@ -91,6 +92,12 @@ namespace PersonalTuringMachine.ViewModel
             }
 
             return 0;
+        }
+
+        public void MoveHeadTo(int index)
+        {
+            GetCellWithHead().HasHead = false;
+            Cells[0].HasHead = true;
         }
 
         private CellViewModel GetCellWithHead()
