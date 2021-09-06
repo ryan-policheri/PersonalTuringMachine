@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace PersonalTuringMachine.ViewModel
 {
@@ -20,7 +21,7 @@ namespace PersonalTuringMachine.ViewModel
             EmptySymbol = emptySymbol;
 
             Cells = new ObservableCollection<CellViewModel>();
-            if (initialCells != null) { foreach (CellViewModel cell in initialCells) { AddCell(cell.Value, cell.HasHead); } }
+            if (initialCells != null && initialCells.Count() > 0) { foreach (CellViewModel cell in initialCells) { AddCell(cell.Value, cell.HasHead); } }
             MaintainEmptyCellBuffer();
         }
 

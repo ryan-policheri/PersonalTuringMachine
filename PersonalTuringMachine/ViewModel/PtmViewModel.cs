@@ -194,6 +194,7 @@ namespace PersonalTuringMachine.ViewModel
             TapeViewModel readTape = Tapes.Where(x => x.Type == TapeType.ReadOnly).First();
             readTape.Clear();
             foreach (char letter in input) { readTape.AddCell(letter); }
+            readTape.Cells.First().HasHead = true;
         }
 
         private void OnAddTape()
