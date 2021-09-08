@@ -37,6 +37,8 @@
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Personal Turing Machine" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-        <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding Ptm}" Margin="10"/>
+        <ScrollViewer Grid.Row="2" Grid.Column="0"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ContentControl Content="{Binding Ptm}" Margin="10"/>
+        </ScrollViewer>
     </Grid>
 </Window>
