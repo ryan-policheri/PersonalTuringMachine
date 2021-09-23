@@ -5,7 +5,6 @@ using PersonalTuringMachine.CommandBinding;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reflection.PortableExecutable;
 using System.Threading;
 using PersonalTuringMachine.Model;
 
@@ -13,11 +12,10 @@ namespace PersonalTuringMachine.ViewModel
 {
     public class PtmViewModel : ViewModelBase
     {
-        private const string _startState = "Qstart";
-        private const string _haltState = "Qhalt";
-        private readonly Timer _timer;
-        private SynchronizationContext _context;
-        private bool _forceTerminateMachine = false;
+        protected const string _startState = "Qstart";
+        protected const string _haltState = "Qhalt";
+        protected readonly Timer _timer;
+        protected SynchronizationContext _context;
 
         public PtmViewModel(char[] alphabet, char startSymbol, char emptySymbol, IEnumerable<TapeViewModel> initialTapes, IEnumerable<StateViewModel> initialStates, IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
         {
@@ -33,18 +31,9 @@ namespace PersonalTuringMachine.ViewModel
             States = new ObservableCollection<StateViewModel>();
             TransitionFunctions = new ObservableCollection<TransitionFunctionViewModel>();
 
-            if (initialTapes != null) { foreach (TapeViewModel tape in initialTapes) { Tapes.Add(tape); } }
-
-            if (Tapes != null && Tapes.Count > 0)
-            {
-                Tapes.First().PropertyChanged += (sender, args) =>
-                {
-                    if (args.PropertyName == nameof(TapeViewModel.ActiveCellCount)) OnPropertyChanged(nameof(InputLength));
-                };
-            }
-
-            if (initialStates != null) { foreach (StateViewModel state in initialStates) { States.Add(state); } }
-            if (initialTransitionFunctions != null) { foreach (TransitionFunctionViewModel func in initialTransitionFunctions) { TransitionFunctions.Add(func); } }
+            LoadTapes(initialTapes);
+            LoadStates(initialStates);
+            LoadTransitionFunctions(initialTransitionFunctions);
 
             AddTape = new DelegateCommand(OnAddTape);
             DeleteTape = new DelegateCommand<TapeViewModel>(OnDeleteTape);
@@ -108,7 +97,7 @@ namespace PersonalTuringMachine.ViewModel
         public StateViewModel CurrentState
         {
             get { return _currentState; }
-            private set { SetField(ref _currentState, value); }
+            protected set { SetField(ref _currentState, value); }
         }
 
         private int _executionSpeed;
@@ -141,7 +130,8 @@ namespace PersonalTuringMachine.ViewModel
         private int _stepCount;
         public int StepCount
         {
-            get { return _stepCount; } private set { SetField(ref _stepCount, value); }
+            get { return _stepCount; }
+            protected set { SetField(ref _stepCount, value); }
         }
 
         public void EditTransitionFunction(TransitionFunctionViewModel funcViewModel)
@@ -201,6 +191,29 @@ namespace PersonalTuringMachine.ViewModel
             readTape.Cells.First().HasHead = true;
         }
 
+        protected void LoadTransitionFunctions(IEnumerable<TransitionFunctionViewModel> initialTransitionFunctions)
+        {
+            if (initialTransitionFunctions != null) { foreach (TransitionFunctionViewModel func in initialTransitionFunctions) { TransitionFunctions.Add(func); } }
+        }
+
+        protected void LoadStates(IEnumerable<StateViewModel> initialStates)
+        {
+            if (initialStates != null) { foreach (StateViewModel state in initialStates) { States.Add(state); } }
+        }
+
+        protected virtual void LoadTapes(IEnumerable<TapeViewModel> initialTapes)
+        {
+            if (initialTapes != null) { foreach (TapeViewModel tape in initialTapes) { Tapes.Add(tape); } }
+
+            if (Tapes != null && Tapes.Count > 0)
+            {
+                Tapes.First().PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == nameof(TapeViewModel.ActiveCellCount)) OnPropertyChanged(nameof(InputLength));
+                };
+            }
+        }
+
         private void OnAddTape()
         {
             Tapes.Add(new TapeViewModel(Tapes.Count + 1, TapeType.ReadWrite, Alphabet, EmptySymbol, new List<CellViewModel> { new CellViewModel(Alphabet, StartSymbol, true) }));
@@ -234,20 +247,20 @@ namespace PersonalTuringMachine.ViewModel
             });
         }
 
-        private void OnToggleMachineOnOff()
+        protected void OnToggleMachineOnOff()
         {
             MachineOn = !MachineOn;
             if (MachineOn) TurnMachineOn();
             else TurnMachineOff();
         }
 
-        private void TurnMachineOff()
+        protected void TurnMachineOff()
         {
             MachineOn = false;
             _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
         }
 
-        private void TurnMachineOn()
+        protected void TurnMachineOn()
         {
             MachineOn = true;
             _timer.Change(0, CalculateTickSpeed());
@@ -269,7 +282,7 @@ namespace PersonalTuringMachine.ViewModel
             return milliseconds;
         }
 
-        private void OnTick(object stateInfo)
+        protected virtual void OnTick(object stateInfo)
         {
             if (!MachineOn) return;
             _context.Post(stateInfo =>
@@ -277,19 +290,8 @@ namespace PersonalTuringMachine.ViewModel
                 CurrentTransitionFunction = GetCurrentTransitionFunction();
                 if (CurrentTransitionFunction == null)
                 {
-                    var function = new TransitionFunctionViewModel(Alphabet, Tapes, States);
                     char[] tapeValues = ReadTapeValues();
-                    function.AddInputState(this.CurrentState, tapeValues);
-                    _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
-                    this.OpenInModal(function, (exitCode) =>
-                    {
-                        if (exitCode == ExitCode.Saved)
-                        {
-                            TransitionFunctions.Add(function);
-                            TurnMachineOn();
-                        }
-                        else TurnMachineOff();
-                    });
+                    TransitionFunctionViewModel function = PromptTransitionFunctionDesigner(tapeValues);
                 }
                 else
                 {
@@ -309,10 +311,31 @@ namespace PersonalTuringMachine.ViewModel
             }, null);
         }
 
+        protected TransitionFunctionViewModel PromptTransitionFunctionDesigner(char[] tapeValues)
+        {
+            TransitionFunctionViewModel function = new TransitionFunctionViewModel(Alphabet, Tapes, States);
+            function.AddInputState(this.CurrentState, tapeValues);
+            _timer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+            this.OpenInModal(function, (exitCode) =>
+            {
+                if (exitCode == ExitCode.Saved)
+                {
+                    TransitionFunctions.Add(function);
+                    TurnMachineOn();
+                }
+                else TurnMachineOff();
+            });
+            return function;
+        }
+
         private TransitionFunctionViewModel GetCurrentTransitionFunction()
         {
             char[] tapeValues = ReadTapeValues();
+            return GetCurrentTransitionFunction(tapeValues);
+        }
 
+        protected TransitionFunctionViewModel GetCurrentTransitionFunction(char[] tapeValues)
+        {
             foreach (TransitionFunctionViewModel function in TransitionFunctions)
             {
                 bool matchesState = function.IsMatch(this.CurrentState, tapeValues);

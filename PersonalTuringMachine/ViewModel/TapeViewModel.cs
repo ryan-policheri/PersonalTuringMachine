@@ -10,20 +10,21 @@ namespace PersonalTuringMachine.ViewModel
     public class TapeViewModel : ViewModelBase
     {
         private const int _emptyCellBuffer = 50;
-        private readonly char[] _alphabet;
 
-        public TapeViewModel(int number, TapeType type, char[] alphabet, char emptySymbol, IEnumerable<CellViewModel> initialCells)
+        public TapeViewModel(int number, TapeType type, char[] alphabet, char emptySymbol, IEnumerable<CellViewModel> initialCells, bool inititialzeWithBuffer = true)
         {
             Number = number;
             Type = type;
 
-            _alphabet = alphabet;
+            Alphabet = alphabet;
             EmptySymbol = emptySymbol;
 
             Cells = new ObservableCollection<CellViewModel>();
             if (initialCells != null && initialCells.Count() > 0) { foreach (CellViewModel cell in initialCells) { AddCell(cell.Value, cell.HasHead); } }
-            MaintainEmptyCellBuffer();
+            if (inititialzeWithBuffer) MaintainEmptyCellBuffer();
         }
+
+        public readonly char[] Alphabet;
 
         public int Number { get; }
 
@@ -39,17 +40,17 @@ namespace PersonalTuringMachine.ViewModel
 
         public ObservableCollection<CellViewModel> Cells { get; }
 
-        private int _activeCellCount;
         public int ActiveCellCount => GetLastValueIndex() + 1;
 
         public void Clear() => Cells.Clear();
 
-        public void AddCell(char value, bool hasHead = false)
+        public virtual CellViewModel AddCell(char value, bool hasHead = false)
         {
-            CellViewModel cell = new CellViewModel(_alphabet, value, hasHead);
+            CellViewModel cell = new CellViewModel(Alphabet, value, hasHead);
             Cells.Add(cell);
             cell.PropertyChanged += Cell_PropertyChanged;
             OnPropertyChanged(nameof(ActiveCellCount));
+            return cell;
         }
 
         public char ReadHeadValue()
@@ -100,22 +101,7 @@ namespace PersonalTuringMachine.ViewModel
             Cells[0].HasHead = true;
         }
 
-        private CellViewModel GetCellWithHead()
-        {
-            foreach (CellViewModel cell in Cells) { if (cell.HasHead) return cell; }
-            throw new InvalidOperationException("There should be a head on the tape");
-        }
-
-        private int GetIndexOfHeadCell()
-        {
-            for (int i = 0; i < Cells.Count; i++)
-            {
-                if (Cells[i].HasHead) return i;
-            }
-            throw new InvalidOperationException("There should be a head on the tape");
-        }
-
-        private void Cell_PropertyChanged(object sender, PropertyChangedEventArgs args)
+        protected void Cell_PropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             if (args.PropertyName == nameof(CellViewModel.Value))
             {
@@ -124,7 +110,22 @@ namespace PersonalTuringMachine.ViewModel
             }
         }
 
-        private void MaintainEmptyCellBuffer() //Create a buffer of 50 empty cells at the end to keep the appearance of infinity
+        protected CellViewModel GetCellWithHead()
+        {
+            foreach (CellViewModel cell in Cells) { if (cell.HasHead) return cell; }
+            throw new InvalidOperationException("There should be a head on the tape");
+        }
+
+        public int GetIndexOfHeadCell()
+        {
+            for (int i = 0; i < Cells.Count; i++)
+            {
+                if (Cells[i].HasHead) return i;
+            }
+            throw new InvalidOperationException("There should be a head on the tape");
+        }
+
+        protected void MaintainEmptyCellBuffer() //Create a buffer of 50 empty cells at the end to keep the appearance of infinity
         {
             int i = GetLastValueIndex();
             int desiredLength = i + _emptyCellBuffer;

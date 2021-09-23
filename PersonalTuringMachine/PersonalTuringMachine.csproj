@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Resources\down-arrow.png" />
     <None Remove="Resources\TapeCell.png" />
+    <None Remove="Resources\tilde.jpg" />
     <None Remove="Resources\TuringMachine.jpg" />
   </ItemGroup>
 
@@ -17,6 +18,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\TapeCell.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\tilde.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\TuringMachine.jpg">

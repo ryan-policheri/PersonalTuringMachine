@@ -37,8 +37,10 @@
                     <DataTemplate DataType="{x:Type viewModel:CellViewModel}">
                         <StackPanel>
                             <Image Source="..\Resources\down-arrow.png" Height="10" Width="10" Visibility="{Binding HasHead, Converter={StaticResource boolToVisibility}}"/>
-                            <TextBox Text="{Binding Value, Mode=TwoWay, Converter={StaticResource stringToChar}}" IsReadOnly="{Binding IsReadOnly}" FontSize="12" Padding="2.5" 
-                                 GotFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotMouseCapture" IsMouseCaptureWithinChanged="TextBox_IsMouseCaptureWithinChanged" PreviewKeyDown="TextBox_KeyDown"/>
+                            <Image Source="..\Resources\tilde.jpg" Height="5" Width="15" Visibility="{Binding HasVirtualHead, Converter={StaticResource boolToVisibility}}"/>
+                            <TextBox Text="{Binding Value, Mode=TwoWay, Converter={StaticResource stringToChar}}" ToolTip="{Binding OwningTapeDescription}"
+                                     IsReadOnly="{Binding IsReadOnly}" FontSize="12" Padding="2.5"
+                                     GotFocus="TextBox_GotFocus" GotMouseCapture="TextBox_GotMouseCapture" IsMouseCaptureWithinChanged="TextBox_IsMouseCaptureWithinChanged" PreviewKeyDown="TextBox_KeyDown"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -47,6 +49,7 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="BorderThickness" Value="1"/>
                         <Setter Property="Margin" Value="0"/>
+                        <Setter Property="Background" Value="{Binding OwningTapeNumber, Converter={StaticResource tapeNumberToColor}, Mode=OneWay}"/>
                     </Style>
                 </ListBox.ItemContainerStyle>
             </ListBox>

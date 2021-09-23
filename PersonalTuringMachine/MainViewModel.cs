@@ -30,6 +30,9 @@ namespace PersonalTuringMachine
             LoadMachine = new DelegateCommand(OnLoadMachine);
             LoadInput = new DelegateCommand(OnLoadInput);
 
+            ConvertToStandardMachine = new DelegateCommand(OnConvertToStandardMachine);
+            ConvertToTwoTapeObliviousMachine = new DelegateCommand(OnConvertToTwoTapeObliviousMachine);
+
             Directory.CreateDirectory(_machinesFolder);
             Directory.CreateDirectory(_inputsFolder);
         }
@@ -52,6 +55,10 @@ namespace PersonalTuringMachine
         public ICommand LoadMachine { get; }
 
         public ICommand LoadInput { get; }
+
+        public ICommand ConvertToStandardMachine { get; }
+
+        public ICommand ConvertToTwoTapeObliviousMachine { get; }
 
         public void Load()
         {
@@ -101,6 +108,18 @@ namespace PersonalTuringMachine
         {
             char[] input = Ptm.GetInput();
             _currentInputFile = SaveJsonFileDialog(_inputsFolder, input.ToJson());
+        }
+
+        private void OnConvertToStandardMachine()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private void OnConvertToTwoTapeObliviousMachine()
+        {
+            ObliviousTmViewModel otm = new ObliviousTmViewModel(Ptm.Alphabet, Ptm.StartSymbol, Ptm.EmptySymbol, Ptm.Tapes, Ptm.States, Ptm.TransitionFunctions);
+            Ptm = otm;
         }
 
         private string SaveJsonFileDialog(string folder, string json)
