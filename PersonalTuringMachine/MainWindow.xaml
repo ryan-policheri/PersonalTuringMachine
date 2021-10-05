@@ -38,6 +38,7 @@
             <MenuItem Header="Machine Architecture" >
                 <MenuItem Header="Standard" Command="{Binding ConvertToStandardMachine}"/>
                 <MenuItem Header="Two-Tape Oblivious" Command="{Binding ConvertToTwoTapeObliviousMachine}"/>
+                <MenuItem Header="Character String" Command="{Binding OpenCharacterStringTm}"/>
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Personal Turing Machine" HorizontalAlignment="Center" FontSize="14" FontWeight="Bold"/>

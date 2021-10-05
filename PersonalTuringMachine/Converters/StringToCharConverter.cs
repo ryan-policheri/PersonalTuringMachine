@@ -17,7 +17,7 @@ namespace PersonalTuringMachine.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string str = value.ToString();
-            return str?.First();
+            return str?.FirstOrDefault();
         }
     }
 }

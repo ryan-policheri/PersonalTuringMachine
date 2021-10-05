@@ -32,6 +32,7 @@ namespace PersonalTuringMachine
 
             ConvertToStandardMachine = new DelegateCommand(OnConvertToStandardMachine);
             ConvertToTwoTapeObliviousMachine = new DelegateCommand(OnConvertToTwoTapeObliviousMachine);
+            OpenCharacterStringTm = new DelegateCommand(OnOpenCharacterStringTm);
 
             Directory.CreateDirectory(_machinesFolder);
             Directory.CreateDirectory(_inputsFolder);
@@ -59,6 +60,8 @@ namespace PersonalTuringMachine
         public ICommand ConvertToStandardMachine { get; }
 
         public ICommand ConvertToTwoTapeObliviousMachine { get; }
+
+        public ICommand OpenCharacterStringTm { get; }
 
         public void Load()
         {
@@ -120,6 +123,12 @@ namespace PersonalTuringMachine
         {
             ObliviousTmViewModel otm = new ObliviousTmViewModel(Ptm.Alphabet, Ptm.StartSymbol, Ptm.EmptySymbol, Ptm.Tapes, Ptm.States, Ptm.TransitionFunctions);
             Ptm = otm;
+        }
+
+        private void OnOpenCharacterStringTm()
+        {
+            CharacterStringTmViewModel tm = new CharacterStringTmViewModel(Ptm.Alphabet, Ptm.StartSymbol, Ptm.EmptySymbol, Ptm.Tapes, Ptm.States, Ptm.TransitionFunctions);
+            Ptm = tm;
         }
 
         private string SaveJsonFileDialog(string folder, string json)
